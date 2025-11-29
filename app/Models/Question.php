@@ -3,8 +3,8 @@
 namespace App\Models;
 
 // 1. TAMBAHKAN 'User' DI SINI
-use App\Models\User; 
-use App\Models\Answer; 
+use App\Models\User;
+use App\Models\Answer;
 use App\Models\Like;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,6 +20,7 @@ class Question extends Model
         'user_id',
         'judul',
         'deskripsi',
+        'image',
     ];
 
     /**

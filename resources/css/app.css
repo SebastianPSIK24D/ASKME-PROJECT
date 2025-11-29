@@ -1,3 +1,108 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    /* --- LAYOUT & CONTAINER --- */
+    .card-base {
+        @apply bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg border border-gray-200 dark:border-gray-700;
+    }
+
+    .card-body {
+        @apply p-6 text-gray-900 dark:text-gray-100;
+    }
+
+    /* --- TYPOGRAPHY --- */
+    .text-heading {
+        @apply text-3xl font-bold text-gray-900 dark:text-gray-100;
+    }
+
+    .text-subheading {
+        @apply text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100;
+    }
+
+    .text-meta {
+        @apply text-sm text-gray-600 dark:text-gray-400 mt-2;
+    }
+
+    .text-content {
+        @apply mt-4 text-base text-gray-700 dark:text-gray-300 whitespace-pre-wrap;
+    }
+
+    /* --- AVATAR --- */
+    .avatar-container {
+        @apply w-10 h-10 rounded-full flex-shrink-0 mr-4 border border-gray-200 dark:border-gray-500 shadow-sm overflow-hidden;
+    }
+
+    .avatar-img {
+        @apply w-full h-full object-cover;
+    }
+
+    .avatar-placeholder {
+        @apply w-full h-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-gray-500 dark:text-gray-300;
+    }
+
+    /* --- BUTTONS --- */
+    .btn-action {
+        @apply flex items-center px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition shadow-sm border;
+    }
+
+    .btn-like-modern {
+        @apply flex items-center px-3 py-2 rounded-full hover:text-green-700 dark:hover:text-green-200 transition-colors;
+    }
+
+    .like-active {
+        @apply text-green-600 dark:text-green-500;
+    }
+
+    .like-inactive {
+        @apply text-gray-500 dark:text-gray-400;
+    }
+
+    .btn-primary {
+        @apply inline-flex items-center px-4 py-2 bg-green-600 dark:bg-green-500 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 dark:hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150 shadow-md;
+    }
+
+    .btn-danger {
+        @apply inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150;
+    }
+
+    .btn-icon-delete {
+        @apply px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs rounded hover:bg-red-200 dark:hover:bg-red-900/50 transition flex items-center justify-center;
+    }
+
+    .btn-icon-text {
+        @apply px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition flex items-center justify-center mr-2;
+    }
+
+    /* --- BADGES --- */
+    .badge-count {
+        @apply ml-2 px-1.5 py-0.5 rounded-full text-[10px];
+    }
+
+    .badge-active {
+        @apply badge-count bg-green-500 text-white;
+    }
+
+    .badge-inactive {
+        @apply badge-count bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400;
+    }
+
+    /* --- FORMS --- */
+    .form-textarea {
+        @apply block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-green-500 dark:focus:border-green-600 focus:ring-green-500 dark:focus:ring-green-600 rounded-md shadow-sm;
+    }
+
+        /* --- DEFINISI ANIMASI BOUNCE --- */
+    @keyframes like-bounce {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.4); } /* Membesar 1.4x di tengah animasi */
+    }
+
+    /* Class untuk memicu animasi */
+    .animate-bounce-once {
+        /* Durasi 0.5 detik dengan efek elastis */
+        animation: like-bounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+}
+

@@ -20,6 +20,7 @@ class Answer extends Model
         'user_id',
         'question_id',
         'jawaban',
+        'image',
     ];
 
     /**

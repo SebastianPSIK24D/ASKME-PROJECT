@@ -17,29 +17,20 @@ class LikeController extends Controller
      */
     public function toggleLike(Request $request, Question $question)
     {
-        // 1. Ambil ID user yang sedang login
-        $user_id = Auth::id();
-
-        // 2. Cek apakah user ini SUDAH me-like pertanyaan ini?
-        //    Kita cari di tabel 'likes'
-        $like = $question->likes()
-                         ->where('user_id', $user_id)
-                         ->first();
-
+        $user = Auth::user();
+        $like = $question->likes()->where('user_id', $user->id)->first();
+        $isLiked = false;
         if ($like) {
-            // 3. JIKA SUDAH ADA (like ditemukan): Hapus (Unlike)
             $like->delete();
-            $message = 'Like dibatalkan.';
+            $isLiked = false;
         } else {
-            // 4. JIKA BELUM ADA (like == null): Buat (Like)
-            $question->likes()->create([
-                'user_id' => $user_id
-                // 'question_id' otomatis diisi oleh relasi
-            ]);
-            $message = 'Pertanyaan disukai.';
+            $question->likes()->create(['user_id' => $user->id]);
+            $isLiked = true;
         }
-
-        // 5. Kembalikan user ke halaman detail pertanyaan
-        return redirect()->back()->with('status', $message);
+        return response()->json([
+            'status' => 'success',
+            'liked' => $isLiked,
+            'count' => $question->likes()->count(),
+        ]);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Question; // <-- 1. Kita butuh Model Pertanyaan
+use App\Models\Question;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,25 +13,26 @@ class QuestionController extends Controller
      */
     public function index()
     {
-    $questions = Question::with('user')
-                          ->withCount('likes')
-                          ->withCount('Answers') // Menghitung 'likes' -> $question->likes_count
-                          ->latest()
-                          ->get();
+    $query = Question::with('user')->withCount(['likes', 'answers']);
+    if (request('search')) {
+        $search = request('search');
+        $query->where(function($q) use ($search) {
+                $q->where('judul', 'like', '%' . $search . '%')
+                ->orWhere('deskripsi', 'like', '%' . $search . '%');
+        });
+    }
+    $questions = $query->latest()->paginate(10);
 
     $likedQuestions = [];
     if (Auth::check()) {
-    /** @var \App\Models\User $user */ // <-- 1. TAMBAHKAN BARIS INI
-    $user = Auth::user();                 // <-- 2. Pisahkan ke variabel $user
-    $likedQuestions = $user->likes()      // <-- 3. Panggil dari $user
-                         ->pluck('question_id')
-                         ->flip();
+    /** @var \App\Models\User $user */
+    $user = Auth::user();
+    $likedQuestions = $user->likes()->pluck('question_id')->flip();
 }
 
-    // 3. Kirim semua data ke 'dashboard' view
     return view('dashboard', [
         'questions'      => $questions,
-        'likedQuestions' => $likedQuestions, // Array ID pertanyaan yg sudah di-like
+        'likedQuestions' => $likedQuestions,
     ]);
     }
 
@@ -40,21 +41,17 @@ class QuestionController extends Controller
      */
     public function myQuestions()
     {
-        // 1. Ambil pertanyaan HANYA milik user yang login
-        $questions = Question::where('user_id', Auth::id()) // <-- INI BEDANYA
+        $questions = Question::where('user_id', Auth::id())
                               ->with('user')
-                              ->withCount(['likes', 'answers']) // Hitung like & jawaban
+                              ->withCount(['likes', 'answers'])
                               ->latest()
-                              ->get();
-
-        // 2. Ambil data 'like' user (agar tombol like tetap berfungsi)
+                              ->paginate(10);
         $likedQuestions = [];
         if (Auth::check()) {
+            /** @var \App\Models\User $user */
             $user = Auth::user();
             $likedQuestions = $user->likes()->pluck('question_id')->flip();
         }
-
-        // 3. Kirim ke view baru 'questions.my-questions'
         return view('questions.my-questions', [
             'questions'      => $questions,
             'likedQuestions' => $likedQuestions,
@@ -66,9 +63,6 @@ class QuestionController extends Controller
      */
     public function create()
     {
-        // 3. FUNGSI CREATE
-        // Tugasnya hanya menampilkan file 'view' yang akan kita buat
-        // Nama filenya: resources/views/questions/create.blade.php
         return view('questions.create');
     }
 
@@ -77,49 +71,39 @@ class QuestionController extends Controller
      */
     public function store(Request $request)
     {
-        // 4. FUNGSI STORE (LOGIKA UTAMA)
-
-        // a. Validasi data yang masuk dari form
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
             'deskripsi' => 'required|string|min:10',
+            'image' => 'nullable|image|max:2048',
         ]);
-
-        // b. Tambahkan user_id yang sedang login ke data
-        //    'auth()->id()' adalah cara Laravel mendapatkan ID user
-        $data = array_merge($validated, ['user_id' => Auth::id()]);
-
-        // c. Simpan data ke database
-        //    Ini sama dengan 'INSERT INTO questions ...'
+        $data = [
+        'user_id' => Auth::id(),
+        'judul' => $validated['judul'],
+        'deskripsi' => $validated['deskripsi'],
+        ];
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('question-images', 'public');
+            $data['image'] = $path;
+        }
         Question::create($data);
-
-        // d. Arahkan pengguna kembali ke dashboard dengan pesan sukses
         return redirect()->route('dashboard')->with('status', 'Pertanyaan berhasil diposting!');
     }
-
     /**
      * Display the specified resource.
      */
     public function show(Question $question)
     {
-        // 2. Load relasi DAN hitung jumlah likes
         $question->load(['user', 'answers.user'])->loadCount('likes');
 
-        // 3. Cek apakah user yang login sudah me-like
         $hasLiked = false;
-        if (Auth::check()) { // Cek dulu apakah user login
-            // Cek di tabel likes, apakah ada data user_id & question_id ini
+        if (Auth::check()) {
             $hasLiked = $question->likes()->where('user_id', Auth::id())->exists();
         }
-
-        // 4. Kirim semua data ke view
         return view('questions.show', [
             'question' => $question,
-            'hasLiked' => $hasLiked, // boolean (true/false)
-            // 'likes_count' sekarang otomatis ada di $question->likes_count
+            'hasLiked' => $hasLiked,
         ]);
     }
-    // ... (fungsi edit & update kita kosongkan karena tidak dipakai)
     public function edit(Question $question) { /* ... */ }
     public function update(Request $request, Question $question) { /* ... */ }
 
@@ -128,14 +112,8 @@ class QuestionController extends Controller
      */
     public function destroy(Question $question)
     {
-        // 1. Otorisasi: Cek apakah user ini boleh 'delete' pertanyaan ini?
-        //    Ini akan memanggil QuestionPolicy->delete()
         $this->authorize('delete', $question);
-
-        // 2. Hapus data dari database
         $question->delete();
-
-        // 3. Kembalikan user ke dashboard dengan pesan sukses
         return redirect()->route('dashboard')->with('status', 'Pertanyaan berhasil dihapus!');
     }
 }
