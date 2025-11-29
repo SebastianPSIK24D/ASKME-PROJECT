@@ -14,7 +14,7 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray antialiased bg-gray-100 opacity-0 transition-opacity duration-150 ease-in-out">
+    <body class="font-sans text-gray antialiased opacity-0 transition-opacity duration-500 ease-in-out" x-data x-init="document.body.classList.remove('opacity-0')">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-green-100">
             <div>
                 <a href="/">
