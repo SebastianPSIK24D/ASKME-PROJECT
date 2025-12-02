@@ -6,28 +6,10 @@ window.Alpine = Alpine;
 
 Alpine.start();
 
-window.shareQuestion = function(url, title) {
-    if (navigator.share) {
-        navigator.share({
-            title: title,
-            text: 'Lihat pertanyaan ini di Forum ASKME:',
-            url: url,
-        })
-        .catch((error) => console.log('Error sharing', error));
-    } else {
-        navigator.clipboard.writeText(url).then(function() {
-            alert('Link pertanyaan disalin ke clipboard!');
-        }, function(err) {
-            alert('Gagal menyalin link.');
-        });
-    }
-};
 window.previewImage = function() {
     const input = document.getElementById('image');
     const preview = document.getElementById('image-preview');
-
     const file = input.files[0];
-
     if (file) {
         const reader = new FileReader();
 
@@ -125,6 +107,7 @@ window.toggleLike = async function(questionId) {
         console.error('Error:', error);
     }
 };
+
 document.addEventListener('DOMContentLoaded', () => {
     const mainContent = document.getElementById('main-content');
     if (!mainContent) return;
@@ -152,6 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
 window.addEventListener('pageshow', (event) => {
     if (event.persisted) {
         const mainContent = document.getElementById('main-content');

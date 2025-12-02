@@ -1,17 +1,16 @@
 <x-guest-layout title="Daftar">
-    <form method="POST" action="{{ route('register') }}" class="mt-8 space-y-6">
+    <form method="POST" action="{{ route('register') }}" class="space-y-4">
         @csrf
         <!-- Nama Lengkap -->
         <div>
             <x-input-label for="name" :value="__('Nama Lengkap')" />
-            <x-text-input id="name" class="block mt-1 w-full p-1 border-gray-300 focus:border-green-500 focus:ring-green-500 rounded-lg"
+            <x-text-input id="name" class="block w-full p-1 border-gray-300 focus:border-green-500 focus:ring-green-500 rounded-lg"
                           type="text"
                           name="name"
                           :value="old('name')"
                           required autofocus autocomplete="name" />
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
-
         <!-- Username -->
         <div>
             <x-input-label for="username" :value="__('Username')" />
@@ -22,7 +21,6 @@
                           required autocomplete="username" />
             <x-input-error :messages="$errors->get('username')" class="mt-2" />
         </div>
-
         <!-- Alamat Email -->
         <div>
             <x-input-label for="email" :value="__('Alamat Email')" />
@@ -33,7 +31,6 @@
                           required autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
-
         <!-- Kata Sandi -->
         <div x-data="{ show: false }">
             <x-input-label for="password" :value="__('Kata Sandi')" />

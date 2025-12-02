@@ -49,37 +49,33 @@
                                     </div>
                                 @endif
                             </div>
-                            <div class="px-6 py-3 bg-gray-50 border-t border-gray-100 flex items-center gap-4">
+                            <div class="px-6 py-3 bg-gray-50 border border-green-900 flex items-center gap-4">
                                 @csrf
                                 @php
                                     $hasLiked = isset($likedQuestions[$question->id]);
                                 @endphp
                                 <button onclick="toggleLike({{ $question->id }})"
                                         id="btn-like-{{ $question->id }}"
-                                        class="btn-like-modern {{ $hasLiked ? 'like-active' : 'like-inactive' }}">
+                                        class="flex items-center group border border-green-500 px-3 py-2 rounded-full focus:outline-none">
                                     <svg id="icon-like-{{ $question->id }}"
-                                            class="w-6 h-6 mr-2 transition-transform"
+                                            class="w-5 h-5 mr-1 transition-colors {{ $hasLiked ? 'text-green-600' : 'text-gray-400 group-hover:text-gray-500' }}"
                                                 fill="currentColor" viewBox="0 0 20 20">
                                                 <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.167A1.5 1.5 0 007.5 17h6.086a1.5 1.5 0 001.414-.919l2.21-5.238A1.5 1.5 0 0015.5 8H13V4.5a1.5 1.5 0 00-1.5-1.5l-3.882 1.941a.5.5 0 00-.236.448V8H7.5A1.5 1.5 0 006 9.5v.833z"></path>
                                     </svg>
-                                        <span id="text-like-{{ $question->id }}"
-                                            class="text-sm font-medium transition-colors {{ $hasLiked ? 'text-green-600' : 'text-gray-600 group-hover:text-gray-800' }}">
-                                            {{ $hasLiked ? 'Disukai' : 'Suka' }}
-                                        </span>
+                                    <span id="text-like-{{ $question->id }}"
+                                        class="text-sm font-medium transition-colors {{ $hasLiked ? 'text-green-600' : 'text-gray-600 group-hover:text-gray-800' }}">
+                                        {{ $hasLiked ? 'Disukai' : 'Suka' }}
+                                    </span>
                                     <span id="badge-like-{{ $question->id }}"
                                         class="ml-2 flex items-center justify-center px-2 py-0.5 text-xs font-bold rounded-full transition-colors
                                         {{ $hasLiked ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-600' }}">
                                         {{ $question->likes_count }}
                                     </span>
                                 </button>
-                                <a href="{{ route('question.show', $question) }}" class="flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-green-700 transition-colors">
+                                <a href="{{ route('question.show', $question) }}" class="flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-green-700 transition-colors border border-green-600 px-3 py-2 rounded-full">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
                                     <span>{{ $question->answers_count }} Jawaban</span>
                                 </a>
-                                <button onclick="shareQuestion('{{ route('question.show', $question) }}', '{{ $question->judul }}')" class="flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-green-700 transition-colors mr-auto">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
-                                    <span>Bagikan</span>
-                                </button>
                             </div>
                         </div>
                     @empty
